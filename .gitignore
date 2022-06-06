@@ -361,3 +361,27 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Shmup.sln
+/InitCodeMarker
+/Assembly-CSharp.Player.csproj
+/Assembly-CSharp.csproj
+/Assembly-CSharp-Editor.csproj
+/.vsconfig
+/UserSettings
+/Temp
+/ProjectSettings
+/Library
+/Assets/Textures
+/Assets/TextMesh Pro
+/Assets/test_Physic.unity
+/Assets/Sound
+/Assets/ShmupBoss
+/Assets/New Material.mat
+/Assets/New Material 1.mat
+/Assets/Move.cs
+/Assets/Control.cs
+/Assets/Scenes
+/Assets/SampleSceneAssets
+/Assets/Models
+/Assets/HDRPDefaultResources
+/Assets/!Room
