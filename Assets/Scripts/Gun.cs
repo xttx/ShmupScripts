@@ -123,7 +123,7 @@ public class Gun : MonoBehaviour
                     offset.x = (directional_settings.bullet_grid_offset_H * x) - bullet_col_half_offset;
                     offset.z = (directional_settings.bullet_grid_offset_V * y) - bullet_row_half_offset;
                     b.transform.position = transform.position + offset;
-                    b.transform.rotation = transform.rotation;
+                    b.transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
             
                     var bullet = b.GetComponent<Bullet>();
                     if (bullet == null) return false;
