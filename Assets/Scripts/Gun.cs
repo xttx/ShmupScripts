@@ -119,6 +119,7 @@ public class Gun : MonoBehaviour
     }
     public void Fire_Stop() {
         if (weapon.weapon_type == Weapon_Types.laser) {
+            aud2.Stop();
             weapon.bullet_prefab.SetActive(false);
         }
     }
@@ -155,6 +156,7 @@ public class Gun : MonoBehaviour
         if (!weapon.bullet_prefab.activeSelf) { 
             weapon.bullet_prefab.SetActive(true);
             weapon.bullet_prefab.transform.localScale = new Vector3(laser_initial_scaling.x, laser_initial_scaling.y, 0f);
+            Play_Sound(0); Play_Sound(1);
         }
         return true;
     }
@@ -212,19 +214,21 @@ public class Gun : MonoBehaviour
             if (weapon.weapon_type == Weapon_Types.directional) {
                 if (directional_settings.SFX_Fire != null && directional_settings.SFX_Fire.Length > 0) {
                     var r = Random.Range(0, directional_settings.SFX_Fire.Length);
-                    aud1.PlayOneShot(directional_settings.SFX_Fire[n].clip, directional_settings.SFX_Fire[n].VolumeScale);
+                    aud1.PlayOneShot(directional_settings.SFX_Fire[r].clip, directional_settings.SFX_Fire[r].VolumeScale);
                 }
             } else if (weapon.weapon_type == Weapon_Types.laser) {
                 if (laser_settings.SFX_Fire != null && laser_settings.SFX_Fire.Length > 0) {
                     var r = Random.Range(0, laser_settings.SFX_Fire.Length);
-                    aud1.PlayOneShot(laser_settings.SFX_Fire[n].clip, laser_settings.SFX_Fire[n].VolumeScale);
+                    aud1.PlayOneShot(laser_settings.SFX_Fire[r].clip, laser_settings.SFX_Fire[r].VolumeScale);
                 }
             }
         } else if (n == 1) {
             if (weapon.weapon_type == Weapon_Types.laser) {
                 if (laser_settings.SFX_Continous != null && laser_settings.SFX_Continous.Length > 0) {
                     var r = Random.Range(0, laser_settings.SFX_Continous.Length);
-                    aud2.PlayOneShot(laser_settings.SFX_Continous[n].clip, laser_settings.SFX_Continous[n].VolumeScale);
+                    aud2.clip = laser_settings.SFX_Continous[r].clip;
+                    aud2.volume = Global_Settings.Volume_SFX * laser_settings.SFX_Continous[r].VolumeScale;
+                    aud2.Play();
                 }
             }
         }
