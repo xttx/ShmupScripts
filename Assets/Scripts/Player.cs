@@ -100,9 +100,17 @@ public class Player : Ship_Base
     }
 
     void Sweep_Test(Vector3 dir, float length) {
-        RaycastHit hit;
-        if (rb.SweepTest(dir, out hit, length)) return;
+        //RaycastHit hit;
+        //if (rb.SweepTest(dir, out hit, length)) return;
         
+        var hits = rb.SweepTestAll(dir, length);
+        if (hits != null && hits.Length > 0) {
+            foreach (var h in hits) {
+                if (h.collider.gameObject.GetComponent<Bullet>() != null) continue;
+                return;
+            }
+        }
+
         var new_pos = transform.position + (dir * length);
         transform.position = new_pos;
     }
