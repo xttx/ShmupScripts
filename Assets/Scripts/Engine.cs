@@ -76,4 +76,9 @@ public class Engine : MonoBehaviour
         audio_sources[next_aud_source].PlayOneShot(clip.clip, clip.VolumeScale);
         next_aud_source += 1;
     }
+    public static void Play_Sound_2D(Audio_Info[] clips) {
+        if (clips == null) return;
+        if (clips.Length == 0) return;
+        var n = Random.Range(0, clips.Length); Engine.Play_Sound_2D(clips[n]);
+    }
 }

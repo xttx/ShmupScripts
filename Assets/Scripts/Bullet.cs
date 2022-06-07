@@ -31,6 +31,9 @@ public class Bullet : MonoBehaviour
         if (pos.x > x_max) { Destroy(gameObject); return; }
         if (pos.z < y_min) { Destroy(gameObject); return; }
         if (pos.z > y_max) { Destroy(gameObject); return; }
+
+        //Debug.DrawRay(camera_pos, transform.position - camera_pos, Color.red, 0.1f);
+        //Debug.DrawRay(transform.position, transform.position - camera_pos, Color.red, 0.1f);
     }
 
     void OnCollisionEnter(Collision collision) {

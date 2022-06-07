@@ -21,7 +21,7 @@ public class Player : Ship_Base
         public GameObject shield_prefab = null;
         public Vector3 shield_offset = Vector3.zero;
         public float shield_energy_consumption_per_sec = 1f;
-        public float shield_energy_consumption_per_hit = 3f;
+        public float shield_energy_consumption_per_hit = 0.5f;
         public Engine.Audio_Info[] SFX_ShieldOn = null;
         public Engine.Audio_Info[] SFX_ShieldOff = null;
         public Engine.Audio_Info[] SFX_ShieldLoop = null;
@@ -30,6 +30,7 @@ public class Player : Ship_Base
     
     Rigidbody rb = null;
     Transform camera_main = null;
+    AudioSource shield_aud = null;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +61,9 @@ public class Player : Ship_Base
             ss.shield_prefab.transform.position = transform.position;
             ss.shield_prefab.transform.rotation = Quaternion.identity;
             //ss.shield_prefab.transform.localScale = Vector3.one;
+            shield_aud = ss.shield_prefab.AddComponent<AudioSource>();
+            shield_aud.volume = Global_Settings.Volume_SFX;
+            shield_aud.loop = true;
         }
     }
 
@@ -73,7 +77,11 @@ public class Player : Ship_Base
         var ss = shield_settings;
         if (ss.shield_prefab != null) {
             if (Input.GetKeyDown(controls.shield)) {
-                ss.shield_prefab.SetActive(!ss.shield_prefab.activeSelf);
+                if (ss.shield_prefab.activeSelf) {
+                    Shield_Disable();
+                } else {
+                    Shield_Enable();
+                }
             }
             if (ss.shield_prefab.activeSelf) {
                 var e = ss.shield_energy_consumption_per_sec * Time.deltaTime;
@@ -81,7 +89,7 @@ public class Player : Ship_Base
                 else { ss.shield_prefab.SetActive(false); }
             }
         }
-
+        
         if (Input.GetKeyUp(controls.fire)) {
             foreach (var g in guns) { g.Fire_Stop(); }        
         }
@@ -187,4 +195,36 @@ public class Player : Ship_Base
         return true;
     }
 
+    void Shield_Enable() {
+        var ss = shield_settings;
+        if (ss.shield_prefab == null) { return; }
+
+        ss.shield_prefab.SetActive(true);
+        Engine.Play_Sound_2D(ss.SFX_ShieldOn);
+
+        if (ss.SFX_ShieldLoop != null && ss.SFX_ShieldLoop.Length > 0) {
+            var r = Random.Range(0, ss.SFX_ShieldLoop.Length);
+            shield_aud.clip = ss.SFX_ShieldLoop[r].clip;
+            shield_aud.volume = Global_Settings.Volume_SFX * ss.SFX_ShieldLoop[r].VolumeScale;
+            shield_aud.Play();
+        }
+    }
+    void Shield_Disable() {
+        var ss = shield_settings;
+        if (ss.shield_prefab == null) { return; }
+
+        ss.shield_prefab.SetActive(false);
+        Engine.Play_Sound_2D(ss.SFX_ShieldOff);
+        shield_aud.Stop();
+    }
+    public override void Damage(float d) {
+        var ss = shield_settings;
+        if (ss.shield_prefab != null && ss.shield_prefab.activeSelf) {
+            Engine.Play_Sound_2D(ss.SFX_ShieldHit);
+            energy -= ss.shield_energy_consumption_per_hit;
+            if (energy < 0) { energy = 0; Shield_Disable(); }
+            return;
+        }
+        base.Damage(d);
+    }
 }

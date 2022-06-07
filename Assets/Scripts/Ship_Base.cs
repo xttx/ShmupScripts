@@ -12,7 +12,6 @@ public class Ship_Base : MonoBehaviour
     public Engine.Audio_Info[] SFX_Hit = null;
     public Engine.Audio_Info[] SFX_Death = null;
 
-    //bool shield_enabled = false;
     float energy_recover_timer = 0f;
     
     protected Gun[] guns = null;
@@ -35,7 +34,7 @@ public class Ship_Base : MonoBehaviour
         }
     }
 
-    public void Damage(float d) {
+    public virtual void Damage(float d) {
         if (energy > 0) { 
             energy -= d;
             if (energy < 0) {
@@ -47,9 +46,7 @@ public class Ship_Base : MonoBehaviour
 
         if (health < 0) { health = 0; Death(); }
         else { 
-            if (SFX_Hit != null && SFX_Hit.Length > 0) {
-                var n = Random.Range(0, SFX_Hit.Length); Engine.Play_Sound_2D(SFX_Hit[n]);
-            }
+            if (SFX_Hit != null && SFX_Hit.Length > 0) { Engine.Play_Sound_2D(SFX_Hit); }
         }
     }
 
