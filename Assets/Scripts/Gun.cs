@@ -87,16 +87,18 @@ public class Gun : MonoBehaviour
     {
         fire_delay_timer -= Time.deltaTime;
 
+        //Update laser
         if (weapon.weapon_type == Weapon_Types.laser && weapon.bullet_prefab.activeSelf) {
             var target_scaling = laser_initial_scaling;
             var laser_tr = weapon.bullet_prefab.transform;
             RaycastHit hit;
+            GameObject hit_go = null;
             var b = Physics.Raycast(laser_tr.position, laser_tr.forward, out hit, laser_settings.laser_max_length);
             if (b) {
                 target_scaling.z = Vector3.Distance(laser_tr.position, hit.point);
                 target_scaling.z = target_scaling.z / laser_settings.laser_prefab_length;
                 target_scaling.z = target_scaling.z * laser_initial_scaling.z;
-                Test_Hit(hit.transform.gameObject);
+                hit_go = hit.transform.gameObject;
             } else {
                 target_scaling.z = laser_settings.laser_max_length / laser_settings.laser_prefab_length;
                 target_scaling.z = target_scaling.z * laser_initial_scaling.z;
@@ -108,6 +110,13 @@ public class Gun : MonoBehaviour
                 var new_scale = Vector3.MoveTowards(laser_tr.localScale, target_scaling, laser_settings.laser_speed * Time.deltaTime);
                 laser_tr.localScale = new_scale;
             }
+
+            //Hit detection
+            if (b && hit_go != null) {
+                var real_laser_length = laser_tr.localScale.z / laser_initial_scaling.z * laser_settings.laser_prefab_length;
+                if (hit.distance <= real_laser_length) Test_Hit(hit_go);
+            }
+
             laser_tr.rotation = Quaternion.identity;
         }
     }
