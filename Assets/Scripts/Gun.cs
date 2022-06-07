@@ -56,6 +56,7 @@ public class Gun : MonoBehaviour
                     offset.x = (weapon.bullet_grid_offset_H * x) - bullet_col_half_offset;
                     offset.z = (weapon.bullet_grid_offset_V * y) - bullet_row_half_offset;
                     b.transform.position = transform.position + offset;
+                    b.transform.rotation = transform.rotation;
             
                     var bullet = b.GetComponent<Bullet>();
                     if (bullet == null) return false;
