@@ -6,8 +6,9 @@ public class Engine : MonoBehaviour
 {
     public Transform camera_main = null;
     public Transform[] players = new Transform[]{ null, null, null, null };
+
+    [HideInInspector]
     public Player[] players_cmp = new Player[]{ null, null, null, null };
-    
     [HideInInspector]
     public bool[] players_spawned = new bool[]{ false, false, false, false };
 
