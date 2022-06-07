@@ -32,8 +32,21 @@ public class Bullet : MonoBehaviour
         if (pos.z < y_min) { Destroy(gameObject); return; }
         if (pos.z > y_max) { Destroy(gameObject); return; }
 
+        //Test 2D destructible system
         //Debug.DrawRay(camera_pos, transform.position - camera_pos, Color.red, 0.1f);
         //Debug.DrawRay(transform.position, transform.position - camera_pos, Color.red, 0.1f);
+        //RaycastHit hit;
+        //var b = Physics.Raycast(transform.position, transform.position - camera_pos, out hit, 1000f);
+        //if (b) {
+        //    var dstr = hit.transform.GetComponent<Destructible>();
+        //    if (dstr != null) dstr.Hit(gun.directional_settings.damage);
+        //}
+        var cam = Engine.inst.camera_main.GetComponent<Camera>();
+        var bullet_pos_2d = cam.WorldToScreenPoint(transform.position);
+        foreach (var d in Destructible.destructibles_list) {
+            var d_pos_2d = cam.WorldToScreenPoint(d.transform.position);
+            if (Vector2.Distance(bullet_pos_2d, d_pos_2d) < 10f) { d.Hit(gun.directional_settings.damage); break; }
+        }
     }
 
     void OnCollisionEnter(Collision collision) {

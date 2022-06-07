@@ -26,11 +26,14 @@ public class Player : Ship_Base
         public Engine.Audio_Info[] SFX_ShieldOff = null;
         public Engine.Audio_Info[] SFX_ShieldLoop = null;
         public Engine.Audio_Info[] SFX_ShieldHit = null;
+        public string animator_trigger_on = "";
+        public string animator_trigger_off = "";
     }
     
     Rigidbody rb = null;
     Transform camera_main = null;
     AudioSource shield_aud = null;
+    Animator shield_animator = null;
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +67,7 @@ public class Player : Ship_Base
             shield_aud = ss.shield_prefab.AddComponent<AudioSource>();
             shield_aud.volume = Global_Settings.Volume_SFX;
             shield_aud.loop = true;
+            shield_animator = ss.shield_prefab.GetComponent<Animator>();
         }
     }
 
@@ -208,6 +212,10 @@ public class Player : Ship_Base
             shield_aud.volume = Global_Settings.Volume_SFX * ss.SFX_ShieldLoop[r].VolumeScale;
             shield_aud.Play();
         }
+
+        if (shield_animator != null && !string.IsNullOrWhiteSpace(ss.animator_trigger_on)) {
+            shield_animator.SetTrigger(ss.animator_trigger_on);
+        }
     }
     void Shield_Disable() {
         var ss = shield_settings;
@@ -216,6 +224,10 @@ public class Player : Ship_Base
         ss.shield_prefab.SetActive(false);
         Engine.Play_Sound_2D(ss.SFX_ShieldOff);
         shield_aud.Stop();
+
+        if (shield_animator != null && !string.IsNullOrWhiteSpace(ss.animator_trigger_off)) {
+            shield_animator.SetTrigger(ss.animator_trigger_off);
+        }
     }
     public override void Damage(float d) {
         var ss = shield_settings;
