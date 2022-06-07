@@ -9,7 +9,6 @@ public class Ship_Base : MonoBehaviour
     public float energy_max = 10;
     public float energy_recover_rate = 1f;
 
-    public Engine.Audio_Info[] SFX_Fire = null;
     public Engine.Audio_Info[] SFX_Hit = null;
     public Engine.Audio_Info[] SFX_Death = null;
 

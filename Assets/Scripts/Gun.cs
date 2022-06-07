@@ -24,6 +24,7 @@ public class Gun : MonoBehaviour
         public int damage = 1;
         public int energy_consumption = 1;
         public float speed = 100f;
+        public Engine.Audio_Info[] SFX_Fire = null;
 
         public Vector2Int bullet_grid = new Vector2Int(1, 1);
         public float bullet_grid_offset_H = 3f;
@@ -33,6 +34,8 @@ public class Gun : MonoBehaviour
     public class Laser_Info {
         public float damage_per_sec = 1;
         public float energy_consumption_per_sec = 1;
+        public Engine.Audio_Info[] SFX_Fire = null;
+        public Engine.Audio_Info[] SFX_Continous = null;
 
         public float laser_speed = 50f;
         public float laser_max_length = 300f;
@@ -51,9 +54,18 @@ public class Gun : MonoBehaviour
 
     Vector3 laser_initial_scaling = Vector3.one;
 
+    AudioSource aud1 = null;
+    AudioSource aud2 = null;
+
     // Start is called before the first frame update
     void Start()
     {
+        aud1 = gameObject.AddComponent<AudioSource>();
+        aud2 = gameObject.AddComponent<AudioSource>();
+        aud1.volume = Global_Settings.Volume_SFX;
+        aud2.volume = Global_Settings.Volume_SFX;
+        aud2.loop = true;
+
         bullet_col_half_offset = ((directional_settings.bullet_grid.x - 1) * directional_settings.bullet_grid_offset_H) / 2f;
         bullet_row_half_offset = ((directional_settings.bullet_grid.y - 1) * directional_settings.bullet_grid_offset_V) / 2f;
 
@@ -132,6 +144,7 @@ public class Gun : MonoBehaviour
                 }
             }
 
+            Play_Sound(0);
             return true;
         } else {
             return false;
@@ -192,5 +205,28 @@ public class Gun : MonoBehaviour
 
         //Destroy(gameObject);
         return Hit_test_result.Unknown;
+    }
+
+    void Play_Sound(int n) {
+        if (n == 0) {
+            if (weapon.weapon_type == Weapon_Types.directional) {
+                if (directional_settings.SFX_Fire != null && directional_settings.SFX_Fire.Length > 0) {
+                    var r = Random.Range(0, directional_settings.SFX_Fire.Length);
+                    aud1.PlayOneShot(directional_settings.SFX_Fire[n].clip, directional_settings.SFX_Fire[n].VolumeScale);
+                }
+            } else if (weapon.weapon_type == Weapon_Types.laser) {
+                if (laser_settings.SFX_Fire != null && laser_settings.SFX_Fire.Length > 0) {
+                    var r = Random.Range(0, laser_settings.SFX_Fire.Length);
+                    aud1.PlayOneShot(laser_settings.SFX_Fire[n].clip, laser_settings.SFX_Fire[n].VolumeScale);
+                }
+            }
+        } else if (n == 1) {
+            if (weapon.weapon_type == Weapon_Types.laser) {
+                if (laser_settings.SFX_Continous != null && laser_settings.SFX_Continous.Length > 0) {
+                    var r = Random.Range(0, laser_settings.SFX_Continous.Length);
+                    aud2.PlayOneShot(laser_settings.SFX_Continous[n].clip, laser_settings.SFX_Continous[n].VolumeScale);
+                }
+            }
+        }
     }
 }
