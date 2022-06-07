@@ -46,14 +46,18 @@ public class Player : Ship_Base
         Update_base();
 
         var controls = Global_Settings.Player_Controls[player_index];
+        if (Input.GetKeyUp(controls.fire)) {
+            foreach (var g in guns) { g.Fire_Stop(); }        
+        }
         if (Input.GetKey(controls.fire)) {
             if (energy > 0) {
                 bool fired = false;
+                float energy_consumed = 0f;
                 foreach (var g in guns) {
-                    if (g.Fire()) fired = true;
+                    if (g.Fire()) { fired = true; energy_consumed += g.energy_consumed; }
                 }
-                if (fired) { 
-                    energy -= 1;
+                if (fired) {
+                    energy -= energy_consumed;
                     if (aud != null && SFX_Fire != null && SFX_Fire.Length > 0) {
                         var n = Random.Range(0, SFX_Fire.Length); aud.PlayOneShot(SFX_Fire[n].clip, SFX_Fire[n].VolumeScale);
                     }

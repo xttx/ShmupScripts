@@ -40,7 +40,7 @@ public class Bullet : MonoBehaviour
         if (p != null) {
             if (gun.fraction == Gun.Fractions.Player) return;
 
-            p.Damage(gun.weapon.damage);
+            p.Damage(gun.directional_settings.damage);
             if (!gun.weapon.pass_through_enemies) { Destroy(gameObject); return; }
         }
 
@@ -48,7 +48,7 @@ public class Bullet : MonoBehaviour
         if (e != null) {
             if (gun.fraction == Gun.Fractions.Enemy) return;
 
-            e.Damage(gun.weapon.damage);
+            e.Damage(gun.directional_settings.damage);
             if (!gun.weapon.pass_through_enemies) { Destroy(gameObject); return; }
         }
 

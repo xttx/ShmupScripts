@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Ship_Base : MonoBehaviour
 {
-    public int health = 10;
-    public int energy = 10;
-    public int energy_max = 10;
+    public float health = 10;
+    public float energy = 10;
+    public float energy_max = 10;
     public float energy_recover_rate = 1f;
 
     public Engine.Audio_Info[] SFX_Fire = null;
@@ -36,7 +36,7 @@ public class Ship_Base : MonoBehaviour
         }
     }
 
-    public void Damage(int d) {
+    public void Damage(float d) {
         if (energy > 0) { 
             energy -= d;
             if (energy < 0) {
