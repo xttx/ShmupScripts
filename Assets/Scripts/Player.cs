@@ -7,9 +7,6 @@ public class Player : Ship_Base
     public int player_index = 0;
     public float fly_speed = 100f;
 
-    Rigidbody rb = null;
-    Transform camera_main = null;
-
     public float move_LR_rotation = 40f;
     public float move_LR_rotation_speed = 200f;
     public Vector3 scale_UD_min = new Vector3(1f, 1f, 0.4f);
@@ -17,6 +14,22 @@ public class Player : Ship_Base
     public float scale_UD_speed = 10f;
     public GameObject[] scale_UD_objects = null;
     Vector3[] scale_UD_objects_defaults = null;
+
+    public Shield_Info shield_settings = new Shield_Info();
+    [System.Serializable]
+    public class Shield_Info {
+        public GameObject shield_prefab = null;
+        public Vector3 shield_offset = Vector3.zero;
+        public float shield_energy_consumption_per_sec = 1f;
+        public float shield_energy_consumption_per_hit = 3f;
+        public Engine.Audio_Info[] SFX_ShieldOn = null;
+        public Engine.Audio_Info[] SFX_ShieldOff = null;
+        public Engine.Audio_Info[] SFX_ShieldLoop = null;
+        public Engine.Audio_Info[] SFX_ShieldHit = null;
+    }
+    
+    Rigidbody rb = null;
+    Transform camera_main = null;
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +51,16 @@ public class Player : Ship_Base
                 scale_UD_objects_defaults[n] = scale_UD_objects[n].transform.localScale;
             }
         }
+
+        var ss = shield_settings;
+        if (ss.shield_prefab != null) {
+            if (ss.shield_prefab.scene.name == null) { ss.shield_prefab = Instantiate(ss.shield_prefab); }
+            ss.shield_prefab.SetActive(false);
+            ss.shield_prefab.transform.SetParent(transform);
+            ss.shield_prefab.transform.position = transform.position;
+            ss.shield_prefab.transform.rotation = Quaternion.identity;
+            //ss.shield_prefab.transform.localScale = Vector3.one;
+        }
     }
 
     // Update is called once per frame
@@ -46,6 +69,19 @@ public class Player : Ship_Base
         Update_base();
 
         var controls = Global_Settings.Player_Controls[player_index];
+
+        var ss = shield_settings;
+        if (ss.shield_prefab != null) {
+            if (Input.GetKeyDown(controls.shield)) {
+                ss.shield_prefab.SetActive(!ss.shield_prefab.activeSelf);
+            }
+            if (ss.shield_prefab.activeSelf) {
+                var e = ss.shield_energy_consumption_per_sec * Time.deltaTime;
+                if (energy >= e) { energy -= e; }
+                else { ss.shield_prefab.SetActive(false); }
+            }
+        }
+
         if (Input.GetKeyUp(controls.fire)) {
             foreach (var g in guns) { g.Fire_Stop(); }        
         }

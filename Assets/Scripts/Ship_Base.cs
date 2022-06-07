@@ -12,7 +12,7 @@ public class Ship_Base : MonoBehaviour
     public Engine.Audio_Info[] SFX_Hit = null;
     public Engine.Audio_Info[] SFX_Death = null;
 
-
+    //bool shield_enabled = false;
     float energy_recover_timer = 0f;
     
     protected Gun[] guns = null;

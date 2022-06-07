@@ -12,6 +12,7 @@ public static class Global_Settings
         public KeyCode left = KeyCode.None;
         public KeyCode right = KeyCode.None;
         public KeyCode fire = KeyCode.None;
+        public KeyCode shield = KeyCode.None;
         public KeyCode spawn = KeyCode.None;
     }
 
@@ -43,13 +44,16 @@ public static class Global_Settings
         Player_Controls[0].left = KeyCode.LeftArrow;
         Player_Controls[0].right = KeyCode.RightArrow;
         Player_Controls[0].fire = KeyCode.LeftControl;
+        Player_Controls[0].shield = KeyCode.LeftShift;
+        Player_Controls[0].spawn = KeyCode.LeftControl;
 
         Player_Controls[1] = new Player_Controls_Info();
         Player_Controls[1].up = KeyCode.Keypad8;
         Player_Controls[1].down = KeyCode.Keypad2;
         Player_Controls[1].left = KeyCode.Keypad4;
         Player_Controls[1].right = KeyCode.Keypad6;
-        Player_Controls[1].fire = KeyCode.LeftShift;
-        Player_Controls[1].spawn = KeyCode.LeftShift;
+        Player_Controls[1].fire = KeyCode.X;
+        Player_Controls[1].shield = KeyCode.Z;
+        Player_Controls[1].spawn = KeyCode.X;
     }
 }
