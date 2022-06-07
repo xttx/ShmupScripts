@@ -43,6 +43,7 @@ public class Gun : MonoBehaviour
     [HideInInspector]
     public Fractions fraction = Fractions.None;
     public enum Fractions { None, Player, Enemy };
+    public enum Hit_test_result { Unknown, Ship_SameFraction, Ship_OtherFraction, Bullet_SameFraction, Bullet_OtherFraction };
 
     float fire_delay_timer = -1f;
     float bullet_col_half_offset = 0f;
@@ -164,29 +165,32 @@ public class Gun : MonoBehaviour
         }
     }
 
-    public void Test_Hit(GameObject colided_with) {
+    public Hit_test_result Test_Hit(GameObject colided_with) {
         var p = colided_with.GetComponent<Player>();
         if (p != null) {
-            if (fraction == Gun.Fractions.Player) return;
+            if (fraction == Gun.Fractions.Player) return Hit_test_result.Ship_SameFraction;
 
             p.Damage( damage_inflicted );
-            //if (!weapon.pass_through_enemies) { Destroy(gameObject); return; }
+            return Hit_test_result.Ship_OtherFraction;
         }
 
         var e = colided_with.GetComponent<Ship_Enemy>();
         if (e != null) {
-            if (fraction == Gun.Fractions.Enemy) return;
+            if (fraction == Gun.Fractions.Enemy) return Hit_test_result.Ship_SameFraction;
 
             e.Damage( damage_inflicted );
-            //if (!weapon.pass_through_enemies) { Destroy(gameObject); return; }
+            return Hit_test_result.Ship_OtherFraction;
         }
 
         var b = colided_with.GetComponent<Bullet>();
         if (b != null) {
-            //TODO: We have yet to handle bullet-to-bullet collision
-            return;
+            if (fraction == b.gun.fraction)
+                return Hit_test_result.Bullet_SameFraction;
+            else
+                return Hit_test_result.Bullet_OtherFraction;
         }
 
         //Destroy(gameObject);
+        return Hit_test_result.Unknown;
     }
 }

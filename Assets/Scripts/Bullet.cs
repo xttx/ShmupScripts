@@ -36,28 +36,38 @@ public class Bullet : MonoBehaviour
     void OnCollisionEnter(Collision collision) {
         var g = collision.gameObject;
         
-        var p = g.GetComponent<Player>();
-        if (p != null) {
-            if (gun.fraction == Gun.Fractions.Player) return;
-
-            p.Damage(gun.directional_settings.damage);
+        var res = gun.Test_Hit(g);
+        if (res == Gun.Hit_test_result.Ship_OtherFraction) {
             if (!gun.weapon.pass_through_enemies) { Destroy(gameObject); return; }
         }
 
-        var e = g.GetComponent<Ship_Enemy>();
-        if (e != null) {
-            if (gun.fraction == Gun.Fractions.Enemy) return;
-
-            e.Damage(gun.directional_settings.damage);
-            if (!gun.weapon.pass_through_enemies) { Destroy(gameObject); return; }
+        if (res == Gun.Hit_test_result.Unknown) {
+            //Probably environment
+            Destroy(gameObject);
         }
 
-        var b = g.GetComponent<Bullet>();
-        if (b != null) {
-            //TODO: We have yet to handle bullet-to-bullet collision
-            return;
-        }
+        //var p = g.GetComponent<Player>();
+        //if (p != null) {
+        //    if (gun.fraction == Gun.Fractions.Player) return;
 
-        Destroy(gameObject);
+        //    p.Damage(gun.directional_settings.damage);
+        //    if (!gun.weapon.pass_through_enemies) { Destroy(gameObject); return; }
+        //}
+
+        //var e = g.GetComponent<Ship_Enemy>();
+        //if (e != null) {
+        //    if (gun.fraction == Gun.Fractions.Enemy) return;
+
+        //    e.Damage(gun.directional_settings.damage);
+        //    if (!gun.weapon.pass_through_enemies) { Destroy(gameObject); return; }
+        //}
+
+        //var b = g.GetComponent<Bullet>();
+        //if (b != null) {
+        //    //TODO: We have yet to handle bullet-to-bullet collision
+        //    return;
+        //}
+
+        //Destroy(gameObject);
     }
 }
