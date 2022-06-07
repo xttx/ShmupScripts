@@ -10,6 +10,9 @@ public class Player : Ship_Base
     Rigidbody rb = null;
     Transform camera_main = null;
 
+    public float move_LR_rotation = 40f;
+    public float move_LR_rotation_speed = 200f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +53,8 @@ public class Player : Ship_Base
         rb.angularVelocity = Vector3.zero;
 
         var pos = transform.position;
-        var rot = transform.rotation;
+        var rot = transform.rotation.eulerAngles;
+        var target_z_rot = 0f;
         var scroll_speed = Engine.inst.Scroll_Speed;
 
         var x_min = camera_main.position.x + Global_Settings.player_limits_x.x;
@@ -63,13 +67,15 @@ public class Player : Ship_Base
             //pos.x -= Time.deltaTime * fly_speed;
             //rb.AddForce(-Time.deltaTime * fly_speed * 10, 0f, 0f, ForceMode.Impulse);
             //velocity.x -= fly_speed;
-            Sweep_Test(Vector3.left, fly_speed * Time.deltaTime);
+            bool t = Sweep_Test(Vector3.left, fly_speed * Time.deltaTime);
+            if (t) target_z_rot = move_LR_rotation;
         }
         if (Input.GetKey(controls.right) && pos.x < x_max) {
             //pos.x += Time.deltaTime * fly_speed;
             //rb.AddForce(Time.deltaTime * fly_speed * 10, 0f, 0f, ForceMode.Impulse);
             //velocity.x += fly_speed;
-            Sweep_Test(Vector3.right, fly_speed * Time.deltaTime);
+            bool t = Sweep_Test(Vector3.right, fly_speed * Time.deltaTime);
+            if (t) target_z_rot = -move_LR_rotation;
         }
         if (Input.GetKey(controls.up) && pos.z < y_max) {
             //pos.z += Time.deltaTime * fly_speed;
@@ -92,6 +98,13 @@ public class Player : Ship_Base
         //rb.AddForce(0f, 0f, scroll_speed * Time.deltaTime * 50, ForceMode.Impulse);
         //transform.position = pos;
 
+        //Z-Rotation
+        var angle = Mathf.DeltaAngle(rot.z, target_z_rot);
+        if (!Mathf.Approximately(angle, 0f)) {
+            rot.z = Mathf.MoveTowardsAngle(rot.z, target_z_rot, move_LR_rotation_speed * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(0f, 0f, rot.z);
+        }
+
         //Death limit
         var y_min_death = camera_main.position.z + Global_Settings.player_limits_death_y.x;
         var y_max_death = camera_main.position.z + Global_Settings.player_limits_death_y.y;
@@ -99,7 +112,7 @@ public class Player : Ship_Base
         if (transform.position.z > y_max_death) { Death(); return; }
     }
 
-    void Sweep_Test(Vector3 dir, float length) {
+    bool Sweep_Test(Vector3 dir, float length) {
         //RaycastHit hit;
         //if (rb.SweepTest(dir, out hit, length)) return;
         
@@ -107,12 +120,13 @@ public class Player : Ship_Base
         if (hits != null && hits.Length > 0) {
             foreach (var h in hits) {
                 if (h.collider.gameObject.GetComponent<Bullet>() != null) continue;
-                return;
+                return false;
             }
         }
 
         var new_pos = transform.position + (dir * length);
         transform.position = new_pos;
+        return true;
     }
 
 }
