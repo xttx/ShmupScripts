@@ -12,6 +12,11 @@ public class Player : Ship_Base
 
     public float move_LR_rotation = 40f;
     public float move_LR_rotation_speed = 200f;
+    public Vector3 scale_UD_min = new Vector3(1f, 1f, 0.4f);
+    public Vector3 scale_UD_max = new Vector3(1f, 1f, 1.6f);
+    public float scale_UD_speed = 10f;
+    public GameObject[] scale_UD_objects = null;
+    Vector3[] scale_UD_objects_defaults = null;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +30,14 @@ public class Player : Ship_Base
             g.fraction = Gun.Fractions.Player;
         }
         aud.volume = Global_Settings.Volume_SFX;
+
+        //Save objects (thrusters) default scaling
+        if (scale_UD_objects != null && scale_UD_objects.Length > 0) {
+            scale_UD_objects_defaults = new Vector3[scale_UD_objects.Length];
+            for (int n = 0; n < scale_UD_objects.Length; n++) {
+                scale_UD_objects_defaults[n] = scale_UD_objects[n].transform.localScale;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -55,6 +68,7 @@ public class Player : Ship_Base
         var pos = transform.position;
         var rot = transform.rotation.eulerAngles;
         var target_z_rot = 0f;
+        var target_scale = Vector3.one;
         var scroll_speed = Engine.inst.Scroll_Speed;
 
         var x_min = camera_main.position.x + Global_Settings.player_limits_x.x;
@@ -81,13 +95,15 @@ public class Player : Ship_Base
             //pos.z += Time.deltaTime * fly_speed;
             //rb.AddForce(0f, 0f, Time.deltaTime * fly_speed * 10, ForceMode.Impulse);
             //velocity.z += fly_speed;
-            Sweep_Test(Vector3.forward, fly_speed * Time.deltaTime);
+            bool t = Sweep_Test(Vector3.forward, fly_speed * Time.deltaTime);
+            if (t) target_scale = scale_UD_max;
         }
         if (Input.GetKey(controls.down) && pos.z > y_min) {
             //pos.z -= Time.deltaTime * fly_speed;
             //rb.AddForce(0f, 0f, -Time.deltaTime * fly_speed * 10, ForceMode.Impulse);
             //velocity.z -= fly_speed;
-            Sweep_Test(Vector3.back, fly_speed * Time.deltaTime);
+            bool t = Sweep_Test(Vector3.back, fly_speed * Time.deltaTime);
+            if (t) target_scale = scale_UD_min;
         }
 
         //pos.z += scroll_speed * Time.deltaTime;
@@ -103,6 +119,16 @@ public class Player : Ship_Base
         if (!Mathf.Approximately(angle, 0f)) {
             rot.z = Mathf.MoveTowardsAngle(rot.z, target_z_rot, move_LR_rotation_speed * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0f, 0f, rot.z);
+        }
+
+        //Thruster scaling
+        if (scale_UD_objects != null) {
+            for (int n = 0; n < scale_UD_objects.Length; n++) {
+                var scale_orig = scale_UD_objects_defaults[n];
+                var scale_new = Vector3.Scale(target_scale, scale_orig);
+                var s = Vector3.MoveTowards(scale_UD_objects[n].transform.localScale, scale_new, scale_UD_speed * Time.deltaTime);
+                scale_UD_objects[n].transform.localScale = s;
+            }
         }
 
         //Death limit
