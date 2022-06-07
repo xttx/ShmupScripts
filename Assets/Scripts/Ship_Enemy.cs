@@ -67,10 +67,11 @@ public class Ship_Enemy : Ship_Base
         }
         
 
-        if (gun != null) {
+        if (guns != null) {
             fire_timer += Time.deltaTime;
             if (fire_timer >= Fire_Delay) {
-                fire_timer = 0f; gun.Fire();
+                fire_timer = 0f; 
+                foreach (var g in guns) { g.Fire(); }
                 if (aud != null && SFX_Fire != null && SFX_Fire.Length > 0) {
                     var n = Random.Range(0, SFX_Fire.Length); aud.PlayOneShot(SFX_Fire[n].clip, SFX_Fire[n].VolumeScale);
                 }

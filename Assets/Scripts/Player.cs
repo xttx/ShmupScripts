@@ -18,7 +18,9 @@ public class Player : Ship_Base
         rb = GetComponent<Rigidbody>();
         camera_main = Engine.inst.camera_main.transform;
 
-        gun.fraction = Gun.Fractions.Player;
+        foreach (var g in guns) {
+            g.fraction = Gun.Fractions.Player;
+        }
         aud.volume = Global_Settings.Volume_SFX;
     }
 
@@ -30,7 +32,11 @@ public class Player : Ship_Base
         var controls = Global_Settings.Player_Controls[player_index];
         if (Input.GetKey(controls.fire)) {
             if (energy > 0) {
-                if (gun.Fire()) { 
+                bool fired = false;
+                foreach (var g in guns) {
+                    if (g.Fire()) fired = true;
+                }
+                if (fired) { 
                     energy -= 1;
                     if (aud != null && SFX_Fire != null && SFX_Fire.Length > 0) {
                         var n = Random.Range(0, SFX_Fire.Length); aud.PlayOneShot(SFX_Fire[n].clip, SFX_Fire[n].VolumeScale);

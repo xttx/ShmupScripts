@@ -16,14 +16,14 @@ public class Ship_Base : MonoBehaviour
 
     float energy_recover_timer = 0f;
     
-    protected Gun gun = null;
+    protected Gun[] guns = null;
     protected AudioSource aud = null;
     
     // Start is called before the first frame update
     public void Start_Base()
     {
         aud = GetComponent<AudioSource>();
-        gun = GetComponentInChildren<Gun>();
+        guns = GetComponentsInChildren<Gun>();
     }
 
     // Update is called once per frame

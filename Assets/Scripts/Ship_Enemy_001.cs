@@ -9,7 +9,9 @@ public class Ship_Enemy_001 : Ship_Enemy
     {
         Start_Base_Enemy();
 
-        gun.fraction = Gun.Fractions.Enemy;
+        foreach (var g in guns) {
+            g.fraction = Gun.Fractions.Enemy;
+        }
         aud.volume = Global_Settings.Volume_SFX;
     }
 
