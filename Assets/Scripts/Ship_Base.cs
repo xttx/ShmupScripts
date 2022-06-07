@@ -20,9 +20,10 @@ public class Ship_Base : MonoBehaviour
     protected AudioSource aud = null;
     
     // Start is called before the first frame update
-    void Start()
+    public void Start_Base()
     {
-        
+        aud = GetComponent<AudioSource>();
+        gun = GetComponentInChildren<Gun>();
     }
 
     // Update is called once per frame

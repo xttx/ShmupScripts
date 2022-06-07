@@ -27,9 +27,9 @@ public class Ship_Enemy : Ship_Base
     public enum Movement_Types { none, direct, spline }
 
     // Start is called before the first frame update
-    void Start()
+    public void Start_Base_Enemy()
     {
-        
+        Start_Base();
     }
 
     // Update is called once per frame

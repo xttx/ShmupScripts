@@ -7,8 +7,7 @@ public class Ship_Enemy_001 : Ship_Enemy
     // Start is called before the first frame update
     void Start()
     {
-        aud = GetComponent<AudioSource>();
-        gun = GetComponentInChildren<Gun>();
+        Start_Base_Enemy();
 
         gun.fraction = Gun.Fractions.Enemy;
         aud.volume = Global_Settings.Volume_SFX;

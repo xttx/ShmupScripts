@@ -13,9 +13,9 @@ public class Player : Ship_Base
     // Start is called before the first frame update
     void Start()
     {
+        Start_Base();
+
         rb = GetComponent<Rigidbody>();
-        aud = GetComponent<AudioSource>();
-        gun = GetComponentInChildren<Gun>();
         camera_main = Engine.inst.camera_main.transform;
 
         gun.fraction = Gun.Fractions.Player;
