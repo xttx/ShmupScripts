@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Player : Ship_Base
@@ -34,6 +35,7 @@ public class Player : Ship_Base
     Transform camera_main = null;
     AudioSource shield_aud = null;
     Animator shield_animator = null;
+    List<Gun>[] guns_indexed = new List<Gun>[]{ new List<Gun>(), new List<Gun>(), new List<Gun>(), new List<Gun>() };
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +47,7 @@ public class Player : Ship_Base
 
         foreach (var g in guns) {
             g.fraction = Gun.Fractions.Player;
+            if (g.fire_index <= 3) { guns_indexed[g.fire_index].Add(g); }
         }
         aud.volume = Global_Settings.Volume_SFX;
 
@@ -78,6 +81,7 @@ public class Player : Ship_Base
 
         var controls = Global_Settings.Player_Controls[player_index];
 
+        //Shield
         var ss = shield_settings;
         if (ss.shield_prefab != null) {
             if (Input.GetKeyDown(controls.shield)) {
@@ -94,17 +98,21 @@ public class Player : Ship_Base
             }
         }
         
-        if (Input.GetKeyUp(controls.fire)) {
-            foreach (var g in guns) { g.Fire_Stop(); }        
-        }
-        if (Input.GetKey(controls.fire)) {
-            if (energy > 0) {
-                foreach (var g in guns) {
-                    if (g.Fire()) { energy -= g.energy_consumed; }
+        //Fire
+        var fire_buttons = new KeyCode[]{ controls.fire1, controls.fire2, controls.fire3, controls.fire4 };
+        for (int n = 0; n < 3; n++) {
+            if (guns_indexed[n].Count == 0) continue;
+            if (Input.GetKeyUp(fire_buttons[n])) {
+                foreach (var g in guns_indexed[n]) { g.Fire_Stop(); }        
+            }
+            if (Input.GetKey(fire_buttons[n])) {
+                if (energy > 0) {
+                    foreach (var g in guns_indexed[n]) {
+                        if (g.Fire()) { energy -= g.energy_consumed; }
+                    }
                 }
             }
         }
-
 
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;

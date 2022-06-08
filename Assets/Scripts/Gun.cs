@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
+    public int fire_index = 0;
     public Weapon_Info weapon = new Weapon_Info();
     public Directional_Info directional_settings = new Directional_Info();
     public Laser_Info laser_settings = new Laser_Info();

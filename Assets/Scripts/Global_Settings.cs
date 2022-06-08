@@ -11,7 +11,10 @@ public static class Global_Settings
         public KeyCode down = KeyCode.None;
         public KeyCode left = KeyCode.None;
         public KeyCode right = KeyCode.None;
-        public KeyCode fire = KeyCode.None;
+        public KeyCode fire1 = KeyCode.None;
+        public KeyCode fire2 = KeyCode.None;
+        public KeyCode fire3 = KeyCode.None;
+        public KeyCode fire4 = KeyCode.None;
         public KeyCode shield = KeyCode.None;
         public KeyCode spawn = KeyCode.None;
     }
@@ -43,7 +46,9 @@ public static class Global_Settings
         Player_Controls[0].down = KeyCode.DownArrow;
         Player_Controls[0].left = KeyCode.LeftArrow;
         Player_Controls[0].right = KeyCode.RightArrow;
-        Player_Controls[0].fire = KeyCode.LeftControl;
+        Player_Controls[0].fire1 = KeyCode.LeftControl;
+        Player_Controls[0].fire2 = KeyCode.LeftAlt;
+        Player_Controls[0].fire3 = KeyCode.Space;
         Player_Controls[0].shield = KeyCode.LeftShift;
         Player_Controls[0].spawn = KeyCode.LeftControl;
 
@@ -52,8 +57,10 @@ public static class Global_Settings
         Player_Controls[1].down = KeyCode.Keypad2;
         Player_Controls[1].left = KeyCode.Keypad4;
         Player_Controls[1].right = KeyCode.Keypad6;
-        Player_Controls[1].fire = KeyCode.X;
-        Player_Controls[1].shield = KeyCode.Z;
-        Player_Controls[1].spawn = KeyCode.X;
+        Player_Controls[1].fire1 = KeyCode.X;
+        Player_Controls[1].fire2 = KeyCode.Z;
+        Player_Controls[1].fire3 = KeyCode.C;
+        Player_Controls[1].shield = KeyCode.A;
+        Player_Controls[1].spawn = KeyCode.A;
     }
 }
