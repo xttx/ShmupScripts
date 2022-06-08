@@ -82,3 +82,21 @@ public class Engine : MonoBehaviour
         var n = Random.Range(0, clips.Length); Engine.Play_Sound_2D(clips[n]);
     }
 }
+
+
+ static class ExtensionMethods
+ {
+    /// <summary>
+    /// Rounds Vector3.
+    /// </summary>
+    /// <param name="vector3"></param>
+    /// <param name="decimalPlaces"></param>
+    /// <returns></returns>
+    public static Vector3 Ceil(this Vector3 vector3)
+    {
+        vector3.x = Mathf.Ceil(vector3.x);
+        vector3.y = Mathf.Ceil(vector3.y);
+        vector3.z = Mathf.Ceil(vector3.z);
+        return vector3;
+    }
+ }

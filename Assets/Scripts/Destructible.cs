@@ -8,9 +8,13 @@ public class Destructible : MonoBehaviour
 
     public static List<Destructible> destructibles_list = new List<Destructible>();
 
+    [HideInInspector]
+    public Collider[] colliders = null;
+
     // Start is called before the first frame update
     void Start()
     {
+        colliders = GetComponents<Collider>();
         destructibles_list.Add(this);
     }
 
