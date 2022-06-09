@@ -9,10 +9,12 @@ public class Ship_Enemy : Ship_Base
     public Movement_Direct_Info Movement_Direct_Settings = null;
     public Movement_Spline_Info Movement_Spline_Settings = null;
     public Ship_Enemy[] activate_enemies = null;
+    public Fire_Burst_Info Fire_Burst = new Fire_Burst_Info();
 
     float fire_timer = 0f;
     float spline_timer = 0f;
     protected bool active = false;
+    protected bool fire_burst_active = false;
 
     [System.Serializable]
     public class Movement_Direct_Info {
@@ -22,6 +24,13 @@ public class Ship_Enemy : Ship_Base
     public class Movement_Spline_Info {
         public UnityEngine.Splines.SplineContainer spline = null;
         public float Speed = 10f;
+    }
+    [System.Serializable]
+    public class Fire_Burst_Info {
+        public bool enabled = false;
+        public float burst_interval = 3f;
+        public int fire_count = 3;
+        public float fire_interval = 0.3f;
     }
 
     public enum Movement_Types { none, direct, spline }
@@ -57,6 +66,17 @@ public class Ship_Enemy : Ship_Base
 
         Update_base();
 
+        if (Fire_Burst.enabled) {
+            if (active && !fire_burst_active) {
+                fire_burst_active = true;
+                StartCoroutine( Fire_Burst_Coroutine() );
+            }
+            else if (!active && fire_burst_active) {
+                fire_burst_active = false;
+                this.StopAllCoroutines();
+            }
+        }
+
         if (Movement_Type == Movement_Types.direct && Movement_Direct_Settings != null) {
             transform.position += Vector3.back * Movement_Direct_Settings.Speed * Time.deltaTime;
         }
@@ -67,7 +87,7 @@ public class Ship_Enemy : Ship_Base
         }
         
 
-        if (guns != null) {
+        if (guns != null && !Fire_Burst.enabled) {
             fire_timer += Time.deltaTime;
             if (fire_timer >= Fire_Delay) {
                 fire_timer = 0f; 
@@ -85,7 +105,18 @@ public class Ship_Enemy : Ship_Base
         if (pos.z < y_min || pos.z > y_max) { Destroy_Ship(); return; }
     }
 
+    IEnumerator Fire_Burst_Coroutine() {
+        while (true) {
+            yield return new WaitForSeconds(Fire_Burst.burst_interval);
+            for (int n = 0; n < Fire_Burst.fire_count; n++) {
+                foreach (var g in guns) { g.Fire(); }
+                yield return new WaitForSeconds(Fire_Burst.fire_interval);
+            }
+        }
+    }
+
     public override void Destroy_Ship() {
+        this.StopAllCoroutines();
         Destroy(gameObject);
         if (Movement_Type == Movement_Types.spline && Movement_Spline_Settings != null) {
             Destroy(Movement_Spline_Settings.spline.gameObject);
