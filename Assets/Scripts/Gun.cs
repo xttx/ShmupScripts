@@ -16,6 +16,7 @@ public class Gun : MonoBehaviour
         public GameObject bullet_prefab = null;
         public Vector3 spawn_offset = Vector3.zero;
 
+        public bool force_Y_0 = true;
         public bool pass_through_enemies = false;
         public bool pass_through_environment = false;
     }
@@ -52,6 +53,7 @@ public class Gun : MonoBehaviour
     float fire_delay_timer = -1f;
     float bullet_col_half_offset = 0f;
     float bullet_row_half_offset = 0f;
+    float initial_gun_Y = 0f;
 
     Vector3 laser_initial_scaling = Vector3.one;
 
@@ -66,6 +68,7 @@ public class Gun : MonoBehaviour
         aud1.volume = Global_Settings.Volume_SFX;
         aud2.volume = Global_Settings.Volume_SFX;
         aud2.loop = true;
+        initial_gun_Y = transform.position.y;
 
         bullet_col_half_offset = ((directional_settings.bullet_grid.x - 1) * directional_settings.bullet_grid_offset_H) / 2f;
         bullet_row_half_offset = ((directional_settings.bullet_grid.y - 1) * directional_settings.bullet_grid_offset_V) / 2f;
@@ -119,6 +122,9 @@ public class Gun : MonoBehaviour
             }
 
             laser_tr.rotation = Quaternion.identity;
+            if (weapon.force_Y_0) {
+                laser_tr.position = new Vector3(laser_tr.position.x, initial_gun_Y, laser_tr.position.z);
+            }
         }
     }
 
@@ -147,7 +153,10 @@ public class Gun : MonoBehaviour
                     offset.z = (directional_settings.bullet_grid_offset_V * y) - bullet_row_half_offset;
                     b.transform.position = transform.position + offset;
                     b.transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-            
+                    if (weapon.force_Y_0) {
+                        b.transform.position = new Vector3(b.transform.position.x, initial_gun_Y, b.transform.position.z);
+                    }
+
                     var bullet = b.GetComponent<Bullet>();
                     if (bullet == null) return false;
                     bullet.speed = transform.forward * directional_settings.speed;
