@@ -117,7 +117,8 @@ public class Ship_Enemy : Ship_Base
 
     public override void Destroy_Ship() {
         this.StopAllCoroutines();
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        base.Destroy_Ship();
         if (Movement_Type == Movement_Types.spline && Movement_Spline_Settings != null) {
             Destroy(Movement_Spline_Settings.spline.gameObject);
         }
