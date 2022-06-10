@@ -16,6 +16,9 @@ public class Ship_Base : MonoBehaviour
 
     float energy_recover_timer = 0f;
     
+    Vector3 last_pos = Vector3.zero;
+    Vector3 last_speed = Vector3.zero;
+
     protected Gun[] guns = null;
     protected AudioSource aud = null;
     
@@ -34,6 +37,9 @@ public class Ship_Base : MonoBehaviour
             energy_recover_timer = 0;
             if (energy < energy_max) energy += 1;
         }
+
+        last_speed = transform.position - last_pos;
+        last_pos = transform.position;
     }
 
     public virtual void Damage(float d) {
@@ -64,6 +70,9 @@ public class Ship_Base : MonoBehaviour
         if (Spawn_On_Death != null) {
             var g = Instantiate(Spawn_On_Death);
             g.transform.position = transform.position;
+
+            var mover = g.GetComponent<Linear_Mover>();
+            if (mover != null) { mover.Speed = last_speed / Time.deltaTime; }
         }
         Destroy(gameObject);
     }
