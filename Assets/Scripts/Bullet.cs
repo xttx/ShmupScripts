@@ -89,9 +89,10 @@ public class Bullet : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision collision) {
-        var g = collision.gameObject;
-        
-        var res = gun.Test_Hit(g);
+        Vector3 hit_point = Vector3.zero;
+        if (collision.contactCount > 0) { hit_point = collision.GetContact(0).point; }
+
+        var res = gun.Test_Hit(collision.gameObject, hit_point);
         if (res == Gun.Hit_test_result.Ship_OtherFraction) {
             if (!gun.weapon.pass_through_enemies) { Destroy(gameObject); return; }
         }

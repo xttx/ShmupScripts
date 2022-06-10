@@ -118,7 +118,7 @@ public class Gun : MonoBehaviour
             //Hit detection
             if (b && hit_go != null) {
                 var real_laser_length = laser_tr.localScale.z / laser_initial_scaling.z * laser_settings.laser_prefab_length;
-                if (hit.distance <= real_laser_length) Test_Hit(hit_go);
+                if (hit.distance <= real_laser_length) Test_Hit(hit_go, hit.point);
             }
 
             laser_tr.rotation = Quaternion.identity;
@@ -199,12 +199,12 @@ public class Gun : MonoBehaviour
         }
     }
 
-    public Hit_test_result Test_Hit(GameObject colided_with) {
+    public Hit_test_result Test_Hit(GameObject colided_with, Vector3 hit_point) {
         var p = colided_with.GetComponent<Player>();
         if (p != null) {
             if (fraction == Gun.Fractions.Player) return Hit_test_result.Ship_SameFraction;
 
-            p.Damage( damage_inflicted );
+            p.Damage( damage_inflicted, hit_point );
             return Hit_test_result.Ship_OtherFraction;
         }
 
@@ -212,7 +212,7 @@ public class Gun : MonoBehaviour
         if (e != null) {
             if (fraction == Gun.Fractions.Enemy) return Hit_test_result.Ship_SameFraction;
 
-            e.Damage( damage_inflicted );
+            e.Damage( damage_inflicted, hit_point );
             return Hit_test_result.Ship_OtherFraction;
         }
 

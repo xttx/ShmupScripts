@@ -12,7 +12,9 @@ public class Ship_Base : MonoBehaviour
     public Engine.Audio_Info[] SFX_Hit = null;
     public Engine.Audio_Info[] SFX_Death = null;
 
+    public GameObject hit_VFX = null;
     public GameObject Spawn_On_Death = null;
+
 
     //float energy_recover_timer = 0f;
     
@@ -41,7 +43,7 @@ public class Ship_Base : MonoBehaviour
         last_pos = transform.position;
     }
 
-    public virtual void Damage(float d) {
+    public virtual void Damage(float d, Vector3 hit_point) {
         if (energy > 0) { 
             energy -= d;
             if (energy < 0) {
@@ -54,6 +56,10 @@ public class Ship_Base : MonoBehaviour
         if (health < 0) { health = 0; Death(); }
         else { 
             if (SFX_Hit != null && SFX_Hit.Length > 0) { Engine.Play_Sound_2D(SFX_Hit); }
+        }
+
+        if (hit_VFX != null && hit_point != Vector3.zero) {
+            Instantiate(hit_VFX, hit_point, Quaternion.identity);
         }
     }
 

@@ -237,7 +237,7 @@ public class Player : Ship_Base
             shield_animator.SetTrigger(ss.animator_trigger_off);
         }
     }
-    public override void Damage(float d) {
+    public override void Damage(float d, Vector3 hit_point) {
         var ss = shield_settings;
         if (ss.shield_prefab != null && ss.shield_prefab.activeSelf) {
             Engine.Play_Sound_2D(ss.SFX_ShieldHit);
@@ -245,6 +245,6 @@ public class Player : Ship_Base
             if (energy < 0) { energy = 0; Shield_Disable(); }
             return;
         }
-        base.Damage(d);
+        base.Damage(d, hit_point);
     }
 }
