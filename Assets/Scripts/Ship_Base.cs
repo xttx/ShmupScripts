@@ -14,7 +14,7 @@ public class Ship_Base : MonoBehaviour
 
     public GameObject Spawn_On_Death = null;
 
-    float energy_recover_timer = 0f;
+    //float energy_recover_timer = 0f;
     
     Vector3 last_pos = Vector3.zero;
     Vector3 last_speed = Vector3.zero;
@@ -32,10 +32,9 @@ public class Ship_Base : MonoBehaviour
     // Update is called once per frame
     public void Update_base()
     {
-        energy_recover_timer += Time.deltaTime;
-        if (energy_recover_timer >= energy_recover_rate) {
-            energy_recover_timer = 0;
-            if (energy < energy_max) energy += 1;
+        if (energy < energy_max) {
+            energy += Time.deltaTime * energy_recover_rate;
+            if (energy > energy_max) energy = energy_max;
         }
 
         last_speed = transform.position - last_pos;
