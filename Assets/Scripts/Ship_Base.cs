@@ -12,6 +12,8 @@ public class Ship_Base : MonoBehaviour
     public Engine.Audio_Info[] SFX_Hit = null;
     public Engine.Audio_Info[] SFX_Death = null;
 
+    public GameObject Spawn_On_Death = null;
+
     float energy_recover_timer = 0f;
     
     protected Gun[] guns = null;
@@ -59,6 +61,10 @@ public class Ship_Base : MonoBehaviour
     }
 
     public virtual void Destroy_Ship() {
+        if (Spawn_On_Death != null) {
+            var g = Instantiate(Spawn_On_Death);
+            g.transform.position = transform.position;
+        }
         Destroy(gameObject);
     }
 }
