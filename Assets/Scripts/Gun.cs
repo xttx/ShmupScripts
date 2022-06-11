@@ -185,6 +185,12 @@ public class Gun : MonoBehaviour
         if (b && hit_go != null) {
             var real_laser_length = laser_tr.localScale.z / laser_initial_scaling.z * laser_settings.laser_prefab_length;
             if (hit.distance <= real_laser_length) Test_Hit(hit_go, hit.point);
+        } else {
+            //Hit detection 2D
+            var laser_length = laser_tr.localScale.z * laser_settings.laser_prefab_length / laser_initial_scaling.z;
+            Vector3 laser_LU = laser_tr.position + (laser_tr.right * -0.5f);
+            Vector3 laser_RB = laser_tr.position + (laser_tr.forward * laser_length) + (laser_tr.right * 0.5f);
+            Test_Hit_2D(laser_LU, laser_RB);
         }
 
         laser_tr.rotation = Quaternion.identity;
@@ -242,7 +248,7 @@ public class Gun : MonoBehaviour
         return Hit_test_result.Unknown;
     }
 
-    public void Test_Hit_2D(Vector3 bullet_pos_LU, Vector3 bullet_pos_RD) {
+    public bool Test_Hit_2D(Vector3 bullet_pos_LU, Vector3 bullet_pos_RD) {
         var cam = Engine.inst.camera_main.GetComponent<Camera>();
         
         var bullet_pos_LU_2D = cam.WorldToScreenPoint(bullet_pos_LU);
@@ -283,8 +289,9 @@ public class Gun : MonoBehaviour
                     if (Vector2.Distance(RB, pos_2D) <= radius_2D) { hit = true; break; }
                 }
             }
-            if (hit) { d.Hit(directional_settings.damage); break; }
+            if (hit) { d.Hit(directional_settings.damage); return true; }
         }
+        return false;
     }
 
     void Play_Sound(int n) {
