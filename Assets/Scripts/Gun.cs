@@ -17,6 +17,7 @@ public class Gun : MonoBehaviour
         public Vector3 spawn_offset = Vector3.zero;
 
         public bool force_Y_0 = true;
+        public bool project_Y_0 = false;
         public bool pass_through_enemies = false;
         public bool pass_through_environment = false;
     }
@@ -153,6 +154,12 @@ public class Gun : MonoBehaviour
                     offset.z = (directional_settings.bullet_grid_offset_V * y) - bullet_row_half_offset;
                     b.transform.position = transform.position + offset;
                     b.transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+                    if (weapon.project_Y_0) {
+                        var cam = Engine.inst.camera_main.GetComponent<Camera>();
+                        var pos = cam.WorldToScreenPoint(transform.position);
+                        pos.z = cam.transform.position.y; //Distance from camera
+                        b.transform.position = cam.ScreenToWorldPoint(pos);
+                    }
                     if (weapon.force_Y_0) {
                         b.transform.position = new Vector3(b.transform.position.x, initial_gun_Y, b.transform.position.z);
                     }
