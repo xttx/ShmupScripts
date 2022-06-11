@@ -259,13 +259,21 @@ public class Gun : MonoBehaviour
                     }
                 }
                 else if (c.GetType() == typeof(CapsuleCollider)) {
+                    var scale = c.gameObject.transform.localScale.y;
                     var capsule = (CapsuleCollider)c;
-                    var pos = c.gameObject.transform.position + capsule.center;
-                    var posU = c.gameObject.transform.position + (Vector3.forward * capsule.radius);
+                    var pos = c.gameObject.transform.position + (capsule.center * scale);
+                    var posU = c.gameObject.transform.position + (Vector3.forward * capsule.radius * scale);
                     var pos_2D = cam.WorldToScreenPoint(pos);
                     var posU_2D = cam.WorldToScreenPoint(posU);
                     var radius_2D = posU_2D.y - pos_2D.y;
-                    //TODO
+                    var LT = new Vector2(r_bullet.xMin, r_bullet.yMin);
+                    var LB = new Vector2(r_bullet.xMin, r_bullet.yMax);
+                    var RT = new Vector2(r_bullet.xMax, r_bullet.yMin);
+                    var RB = new Vector2(r_bullet.xMax, r_bullet.yMax);
+                    if (Vector2.Distance(LT, pos_2D) <= radius_2D) { hit = true; break; }
+                    if (Vector2.Distance(LB, pos_2D) <= radius_2D) { hit = true; break; }
+                    if (Vector2.Distance(RT, pos_2D) <= radius_2D) { hit = true; break; }
+                    if (Vector2.Distance(RB, pos_2D) <= radius_2D) { hit = true; break; }
                 }
             }
             if (hit) { d.Hit(directional_settings.damage); break; }
