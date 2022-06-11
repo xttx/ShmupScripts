@@ -34,58 +34,12 @@ public class Bullet : MonoBehaviour
         if (pos.z < y_min) { Destroy(gameObject); return; }
         if (pos.z > y_max) { Destroy(gameObject); return; }
 
-        Check_Collision_2D();
-    }
-
-    void Check_Collision_2D() {
-        if (col == null) return;
-
-        var cam = Engine.inst.camera_main.GetComponent<Camera>();
-        
-        var bullet_pos_LU = new Vector3(col.bounds.min.x, col.transform.position.y, col.bounds.min.z);
-        var bullet_pos_RD = new Vector3(col.bounds.max.x, col.transform.position.y, col.bounds.max.z);
-        var bullet_pos_LU_2D = cam.WorldToScreenPoint(bullet_pos_LU);
-        var bullet_pos_RD_2D = cam.WorldToScreenPoint(bullet_pos_RD);
-        var r_bullet = new Rect(bullet_pos_LU_2D, bullet_pos_RD_2D - bullet_pos_LU_2D);
-        
-        foreach (var d in Destructible.destructibles_list) {
-            if (d.colliders == null || d.colliders.Length == 0) continue;
-
-            bool hit = false;
-            foreach (var c in d.colliders) {
-                if (c.GetType() == typeof(BoxCollider)) {
-                    var box_col = (BoxCollider)c;
-                    var col_pos_LU = new Vector3(box_col.bounds.min.x, box_col.transform.position.y + box_col.center.y, box_col.bounds.min.z);
-                    var col_pos_RD = new Vector3(box_col.bounds.max.x, box_col.transform.position.y + box_col.center.y, box_col.bounds.max.z);
-                    var col_pos_LU_2D = cam.WorldToScreenPoint(col_pos_LU);
-                    var col_pos_RD_2D = cam.WorldToScreenPoint(col_pos_RD);
-                    var r_col = new Rect(col_pos_LU_2D, col_pos_RD_2D - col_pos_LU_2D);        
-                    if (r_bullet.Overlaps(r_col)) {
-                        hit = true; break;
-                    }
-                }
-                else if (c.GetType() == typeof(CapsuleCollider)) {
-                    var capsule = (CapsuleCollider)c;
-                    var pos = c.gameObject.transform.position + capsule.center;
-                    var posU = c.gameObject.transform.position + (Vector3.forward * capsule.radius);
-                    var pos_2D = cam.WorldToScreenPoint(pos);
-                    var posU_2D = cam.WorldToScreenPoint(posU);
-                    var radius_2D = posU_2D.y - pos_2D.y;
-                    //TODO
-                }
-            }
-            if (hit) { d.Hit(gun.directional_settings.damage); break; }
+        //Check collision 2D
+        if (col != null) {
+            var bullet_pos_LU = new Vector3(col.bounds.min.x, col.transform.position.y, col.bounds.min.z);
+            var bullet_pos_RD = new Vector3(col.bounds.max.x, col.transform.position.y, col.bounds.max.z);
+            gun.Test_Hit_2D(bullet_pos_LU, bullet_pos_RD);
         }
-
-        //Test 2D destructible system using raycast, and it works bad
-        //Debug.DrawRay(camera_pos, transform.position - camera_pos, Color.red, 0.1f);
-        //Debug.DrawRay(transform.position, transform.position - camera_pos, Color.red, 0.1f);
-        //RaycastHit hit;
-        //var b = Physics.Raycast(transform.position, transform.position - camera_pos, out hit, 1000f);
-        //if (b) {
-        //    var dstr = hit.transform.GetComponent<Destructible>();
-        //    if (dstr != null) dstr.Hit(gun.directional_settings.damage);
-        //}
     }
 
     void OnCollisionEnter(Collision collision) {
