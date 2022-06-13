@@ -133,6 +133,7 @@ public class Gun : MonoBehaviour
                     var bullet = b.GetComponent<Bullet>();
                     if (bullet == null) return false;
                     bullet.speed = transform.forward * directional_settings.speed;
+                    bullet.speed.y = 0f;
                     bullet.gun = this;
                 }
             }
