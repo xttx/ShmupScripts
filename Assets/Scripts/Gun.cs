@@ -27,6 +27,8 @@ public class Gun : MonoBehaviour
         public int damage = 1;
         public int energy_consumption = 1;
         public float speed = 100f;
+        public GameObject Fire_VFX = null;
+        public Vector3 Fire_VFX_offset = Vector3.zero;
         public Engine.Audio_Info[] SFX_Fire = null;
 
         public Vector2Int bullet_grid = new Vector2Int(1, 1);
@@ -96,9 +98,10 @@ public class Gun : MonoBehaviour
     }
 
     public bool Fire() {
-        if (weapon.weapon_type == Weapon_Types.directional) return Fire_Directional();
-        if (weapon.weapon_type == Weapon_Types.laser) return Fire_Laser();
-        return false;
+        bool res = false;
+        if (weapon.weapon_type == Weapon_Types.directional) res = Fire_Directional();
+        if (weapon.weapon_type == Weapon_Types.laser) res = Fire_Laser();
+        return res;
     }
     public void Fire_Stop() {
         if (weapon.weapon_type == Weapon_Types.laser) {
@@ -136,6 +139,11 @@ public class Gun : MonoBehaviour
                     bullet.speed.y = 0f;
                     bullet.gun = this;
                 }
+            }
+
+            if (directional_settings.Fire_VFX != null) {
+                var f_vfx = Instantiate(directional_settings.Fire_VFX);
+                f_vfx.transform.position = transform.position + directional_settings.Fire_VFX_offset;
             }
 
             Play_Sound(0);
