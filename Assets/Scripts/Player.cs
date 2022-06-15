@@ -197,6 +197,10 @@ public class Player : Ship_Base
         var hits = rb.SweepTestAll(dir, length);
         if (hits != null && hits.Length > 0) {
             foreach (var h in hits) {
+                var item = h.collider.gameObject.GetComponent<Item>();
+                if (item) {
+                    item.Collect(this); continue;
+                }
                 if (h.collider.gameObject.GetComponent<Bullet>() != null) continue;
                 return false;
             }

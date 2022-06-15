@@ -18,4 +18,8 @@ public class Item : MonoBehaviour
     {
         
     }
+
+    public void Collect(Player p) {
+        Destroy(gameObject);
+    }
 }
