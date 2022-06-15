@@ -10,6 +10,8 @@ public class Ship_Enemy : Ship_Base
     public Movement_Direct_Info Movement_Direct_Settings = null;
     public Movement_Spline_Info Movement_Spline_Settings = null;
     public float Auto_Target_Speed = 0f;
+    public float Auto_Target_Tilt_Max = 30f;
+    public float Auto_Target_Tilt_Speed = 10f;
     public Ship_Enemy[] activate_enemies = null;
     public Fire_Burst_Info Fire_Burst = new Fire_Burst_Info();
 
@@ -144,6 +146,12 @@ public class Ship_Enemy : Ship_Base
         dir.y = 0f;
         var rotation = Quaternion.LookRotation(dir);
         rotation = Quaternion.RotateTowards(transform.rotation, rotation, Auto_Target_Speed * Time.deltaTime);
+        
+        float target_rot_z = 0f;
+        if (transform.rotation.eulerAngles.y > rotation.eulerAngles.y) { target_rot_z = Auto_Target_Tilt_Max; } 
+        else { target_rot_z = -Auto_Target_Tilt_Max; }
+        var rotation_tilted = Quaternion.Euler(rotation.eulerAngles.x, rotation.eulerAngles.y, target_rot_z);
+        rotation = Quaternion.RotateTowards(rotation, rotation_tilted, Auto_Target_Tilt_Speed * Time.deltaTime);
 
         transform.rotation = rotation;
     }
