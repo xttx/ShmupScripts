@@ -5,6 +5,7 @@ using UnityEngine;
 public class Ship_Enemy : Ship_Base
 {
     public float Fire_Delay = 1f;
+    public Vector2 Fire_Delay_Random = Vector2.zero;
     public Movement_Types Movement_Type = Movement_Types.direct;
     public Movement_Direct_Info Movement_Direct_Settings = null;
     public Movement_Spline_Info Movement_Spline_Settings = null;
@@ -49,6 +50,8 @@ public class Ship_Enemy : Ship_Base
     // Update is called once per frame
     public void Update_base_enemy()
     {
+        if (Waiting_For_Destroy) return;
+
         if (!active) {
             var z_camera = Engine.inst.camera_main.position.z;
             var distance = Mathf.Abs(transform.position.z - z_camera);
@@ -97,6 +100,7 @@ public class Ship_Enemy : Ship_Base
             if (fire_timer >= Fire_Delay) {
                 fire_timer = 0f; 
                 foreach (var g in guns) { g.Fire(); }
+                if (Fire_Delay_Random != Vector2.zero) { Fire_Delay = Random.Range(Fire_Delay_Random.x, Fire_Delay_Random.y); }
             }
         }
 

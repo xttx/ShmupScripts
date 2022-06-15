@@ -327,4 +327,10 @@ public class Gun : MonoBehaviour
             }
         }
     }
+
+    public bool Is_Playing_Sound {
+        get {
+            return aud1.isPlaying || aud2.isPlaying;
+        }
+    }
 }

@@ -23,6 +23,7 @@ public class Ship_Base : MonoBehaviour
 
     protected Gun[] guns = null;
     protected AudioSource aud = null;
+    protected bool Waiting_For_Destroy = false;
     
     // Start is called before the first frame update
     public void Start_Base()
@@ -34,6 +35,8 @@ public class Ship_Base : MonoBehaviour
     // Update is called once per frame
     public void Update_base()
     {
+        if (Waiting_For_Destroy) return;
+
         if (energy < energy_max) {
             energy += Time.deltaTime * energy_recover_rate;
             if (energy > energy_max) energy = energy_max;
@@ -79,6 +82,27 @@ public class Ship_Base : MonoBehaviour
             var mover = g.GetComponent<Linear_Mover>();
             if (mover != null) { mover.Speed = last_speed / Time.deltaTime; }
         }
-        Destroy(gameObject);
+        Waiting_For_Destroy = true;
+
+        StartCoroutine( Waiting_For_Destroy_Coroutine() );
+        //Destroy(gameObject);
+    }
+
+    IEnumerator Waiting_For_Destroy_Coroutine() {
+        while (true) {
+            var wait = false;
+            if (aud.isPlaying) {
+                wait = true;
+            } else {
+                foreach (var g in guns) {
+                    if (g.fraction == Gun.Fractions.Enemy && g.Is_Playing_Sound) {
+                        wait = true; break;
+                    }
+                }
+            }
+
+            if (wait) { yield return null; }
+            else { Destroy(gameObject); break; }
+        }
     }
 }
