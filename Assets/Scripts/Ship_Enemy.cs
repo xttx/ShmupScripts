@@ -9,6 +9,7 @@ public class Ship_Enemy : Ship_Base
     public Movement_Types Movement_Type = Movement_Types.direct;
     public Movement_Direct_Info Movement_Direct_Settings = null;
     public Movement_Spline_Info Movement_Spline_Settings = null;
+    public float Auto_Target_Speed = 0f;
     public Ship_Enemy[] activate_enemies = null;
     public Fire_Burst_Info Fire_Burst = new Fire_Burst_Info();
 
@@ -73,6 +74,7 @@ public class Ship_Enemy : Ship_Base
         }
 
         Update_base();
+        Auto_Rotate();
 
         if (Fire_Burst.enabled) {
             if (active && !fire_burst_active) {
@@ -130,6 +132,20 @@ public class Ship_Enemy : Ship_Base
         if (Movement_Type == Movement_Types.spline && Movement_Spline_Settings != null) {
             Destroy(Movement_Spline_Settings.spline.gameObject);
         }
+    }
+
+    void Auto_Rotate() {
+        if (Mathf.Approximately(Auto_Target_Speed, 0f)) return;
+
+        var target = Engine.inst.players[0].transform;
+        //TODO: check for other players
+
+        var dir = target.position - transform.position;
+        dir.y = 0f;
+        var rotation = Quaternion.LookRotation(dir);
+        rotation = Quaternion.RotateTowards(transform.rotation, rotation, Auto_Target_Speed * Time.deltaTime);
+
+        transform.rotation = rotation;
     }
 }
 
