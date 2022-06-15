@@ -71,8 +71,8 @@ public class Ship_Base : MonoBehaviour
         Destroy_Ship();
     }
 
-    public virtual void Destroy_Ship() {
-        if (Spawn_On_Death != null) {
+    public virtual void Destroy_Ship(bool dont_spawn_vfx = false) {
+        if (!dont_spawn_vfx && Spawn_On_Death != null) {
             var g = Instantiate(Spawn_On_Death);
             g.transform.position = transform.position;
 

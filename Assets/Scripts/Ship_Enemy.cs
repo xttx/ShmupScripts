@@ -101,8 +101,8 @@ public class Ship_Enemy : Ship_Base
         var x_max = camera_pos.x + Global_Settings.enemy_limits_x.y;
         var y_min = camera_pos.z + Global_Settings.enemy_limits_y.x;
         var y_max = camera_pos.z + Global_Settings.enemy_limits_y.y;
-        if (pos.x < x_min || pos.x > x_max) { Destroy_Ship(); return; }
-        if (pos.z < y_min || pos.z > y_max) { Destroy_Ship(); return; }
+        if (pos.x < x_min || pos.x > x_max) { Destroy_Ship(true); return; }
+        if (pos.z < y_min || pos.z > y_max) { Destroy_Ship(true); return; }
     }
 
     IEnumerator Fire_Burst_Coroutine() {
@@ -115,10 +115,9 @@ public class Ship_Enemy : Ship_Base
         }
     }
 
-    public override void Destroy_Ship() {
+    public override void Destroy_Ship(bool dont_spawn_vfx = false) {
         this.StopAllCoroutines();
-        //Destroy(gameObject);
-        base.Destroy_Ship();
+        base.Destroy_Ship(dont_spawn_vfx);
         if (Movement_Type == Movement_Types.spline && Movement_Spline_Settings != null) {
             Destroy(Movement_Spline_Settings.spline.gameObject);
         }
