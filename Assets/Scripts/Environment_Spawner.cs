@@ -85,7 +85,7 @@ public class Environment_Spawner : MonoBehaviour
         transform.position += movement * Time.deltaTime;
         movement = movement * acceleration;
 
-        if (z_camera > last_spawn.transform.position.z + Global_Settings.enemy_activation_distance) {
+        if (z_camera > last_spawn.transform.position.z - Global_Settings.enemy_limits_y.x) {
             Destroy(gameObject);
         }
     }
