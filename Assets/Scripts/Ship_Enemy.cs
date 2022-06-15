@@ -39,6 +39,11 @@ public class Ship_Enemy : Ship_Base
     public void Start_Base_Enemy()
     {
         Start_Base();
+
+        foreach (var g in guns) {
+            g.fraction = Gun.Fractions.Enemy;
+        }
+        aud.volume = Global_Settings.Volume_SFX;
     }
 
     // Update is called once per frame
