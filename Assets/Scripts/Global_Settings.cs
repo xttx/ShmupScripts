@@ -23,12 +23,12 @@ public static class Global_Settings
     public static Vector2 player_limits_y = new Vector2(-100f, 100f);
     public static Vector2 player_limits_death_y = new Vector2(-125f, 125f);
 
-    public static float enemy_activation_distance = 130f;
-    public static Vector2 enemy_limits_x = new Vector2(-250f, 250f);
-    public static Vector2 enemy_limits_y = new Vector2(-170f, 170f);
+    public static float enemy_activation_distance = 140f;
+    public static Vector2 enemy_limits_x = new Vector2(-220f, 220f);
+    public static Vector2 enemy_limits_y = new Vector2(-140f, 140f);
 
-    public static Vector2 bullet_limits_x = new Vector2(-300f, 300f);
-    public static Vector2 bullet_limits_y = new Vector2(-200f, 200f);
+    public static Vector2 bullet_limits_x = new Vector2(-220f, 220f);
+    public static Vector2 bullet_limits_y = new Vector2(-140f, 140f);
 
     public static float Volume_SFX = 0.15f;
     public static float Volume_Music = 0.15f;
