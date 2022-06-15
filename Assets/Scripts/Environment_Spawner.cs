@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Environment_Spawner : MonoBehaviour
@@ -10,6 +11,7 @@ public class Environment_Spawner : MonoBehaviour
     public bool scaling_is_ratio = true;
     public Vector3 movement = new Vector3(0f, 0f, -25f);
     public float acceleration = 1.001f;
+    public List<Override_Info> Override_Elements = new List<Override_Info>();
     
     public float Override_Activation_dist = 0f;
     public float Override_Death_dist = 0f;
@@ -22,6 +24,12 @@ public class Environment_Spawner : MonoBehaviour
     GameObject first = null;
     GameObject last = null;
     List<GameObject> objects = new List<GameObject>();
+
+    [System.Serializable]
+    public class Override_Info {
+        public int index = 0;
+        public GameObject prefab = null;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -61,10 +69,17 @@ public class Environment_Spawner : MonoBehaviour
         if (last != null) last.SetActive(false);
         if (objects.Count == 0) return;
         
-        var next_pos = objects[objects.Count - 1].transform.position + offset;
-        for (int n = objects.Count + 1; n <= count; n++) {
+        //var next_pos = objects[objects.Count - 1].transform.position + offset;
+        var next_pos = objects[0].transform.position;
+        //for (int n = objects.Count + 1; n <= count; n++) {
+        for (int n = 0; n < count; n++) {
             var r = Random.Range(0, objects.Count);
             var obj = objects[r];
+            if (Override_Elements != null && Override_Elements.Count > 0) {
+                var over = Override_Elements.Where(e=> e.index == n).FirstOrDefault();
+                if (over != null) obj = over.prefab;
+            }
+
             var new_obj = Instantiate(obj, transform);
             new_obj.transform.position = next_pos;
             new_obj.transform.rotation = obj.transform.rotation;
@@ -82,6 +97,8 @@ public class Environment_Spawner : MonoBehaviour
             last.SetActive(true);
             last_spawn = last;
         }
+
+        foreach (var o in objects) { Destroy(o); }
     }
 
     // Update is called once per frame
