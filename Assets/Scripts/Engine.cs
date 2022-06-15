@@ -14,6 +14,8 @@ public class Engine : MonoBehaviour
 
     public float Scroll_Speed = 5f;
 
+    public static int Money = 0;
+
     public static Engine inst = null;
     public static AudioSource[] audio_sources = null;
     static int next_aud_source = 0;
