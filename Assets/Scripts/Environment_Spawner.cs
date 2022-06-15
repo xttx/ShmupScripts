@@ -11,7 +11,12 @@ public class Environment_Spawner : MonoBehaviour
     public Vector3 movement = new Vector3(0f, 0f, -25f);
     public float acceleration = 1.001f;
     
+    public float Override_Activation_dist = 0f;
+    public float Override_Death_dist = 0f;
+
     GameObject last_spawn = null;
+    float activation_distance = 0f;
+    float death_distance = 0f;
 
     bool active = false;
     GameObject first = null;
@@ -21,6 +26,17 @@ public class Environment_Spawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (Mathf.Approximately(Override_Activation_dist, 0f)) {
+            activation_distance = Global_Settings.enemy_activation_distance;
+        } else {
+            activation_distance = Override_Activation_dist;
+        }
+        if (Mathf.Approximately(Override_Death_dist, 0f)) {
+            death_distance = -Global_Settings.enemy_limits_y.x;
+        } else {
+            death_distance = Override_Death_dist;
+        }
+
         var children = transform.childCount;
         if (children == 1) {
             objects.Add( transform.GetChild(0).gameObject );
@@ -74,7 +90,7 @@ public class Environment_Spawner : MonoBehaviour
         var z_camera = Engine.inst.camera_main.position.z;
         if (!active) {
             var distance = Mathf.Abs(transform.position.z - z_camera);
-            if (distance <= Global_Settings.enemy_activation_distance) {
+            if (distance <= activation_distance) {
                 active = true;
             }
             else {
@@ -85,7 +101,7 @@ public class Environment_Spawner : MonoBehaviour
         transform.position += movement * Time.deltaTime;
         movement = movement * acceleration;
 
-        if (z_camera > last_spawn.transform.position.z - Global_Settings.enemy_limits_y.x) {
+        if (z_camera > last_spawn.transform.position.z + death_distance) {
             Destroy(gameObject);
         }
     }
