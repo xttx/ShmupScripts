@@ -23,6 +23,7 @@ public class Ship_Base : MonoBehaviour
 
     protected Gun[] guns = null;
     protected AudioSource aud = null;
+    protected Item_Spawner item_spawner = null;
     protected bool Waiting_For_Destroy = false;
     
     // Start is called before the first frame update
@@ -30,6 +31,7 @@ public class Ship_Base : MonoBehaviour
     {
         aud = GetComponent<AudioSource>();
         guns = GetComponentsInChildren<Gun>();
+        item_spawner = GetComponent<Item_Spawner>();
     }
 
     // Update is called once per frame
@@ -75,6 +77,8 @@ public class Ship_Base : MonoBehaviour
     }
 
     public virtual void Destroy_Ship(bool dont_spawn_vfx = false) {
+        Waiting_For_Destroy = true;
+
         if (!dont_spawn_vfx && Spawn_On_Death != null) {
             var g = Instantiate(Spawn_On_Death);
             g.transform.position = transform.position;
@@ -82,10 +86,10 @@ public class Ship_Base : MonoBehaviour
             var mover = g.GetComponent<Linear_Mover>();
             if (mover != null) { mover.Speed = last_speed / Time.deltaTime; }
         }
-        Waiting_For_Destroy = true;
+
+        if (item_spawner != null) item_spawner.Spawn();
 
         StartCoroutine( Waiting_For_Destroy_Coroutine() );
-        //Destroy(gameObject);
     }
 
     IEnumerator Waiting_For_Destroy_Coroutine() {

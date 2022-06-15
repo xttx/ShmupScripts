@@ -33,6 +33,8 @@ public static class Global_Settings
     public static float Volume_SFX = 0.15f;
     public static float Volume_Music = 0.15f;
 
+    public enum item_types { not_set, HP, Energy, Life, Money, EXP }
+
     static bool is_initialized = false;
 
     // Start is called before the first frame update
