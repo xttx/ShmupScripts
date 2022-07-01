@@ -51,7 +51,7 @@ public class Gun : MonoBehaviour
     [HideInInspector]
     public Fractions fraction = Fractions.None;
     public enum Fractions { None, Player, Enemy };
-    public enum Hit_test_result { Unknown, Ship_SameFraction, Ship_OtherFraction, Bullet_SameFraction, Bullet_OtherFraction };
+    public enum Hit_test_result { Unknown, Ship_SameFraction, Ship_OtherFraction, Bullet_SameFraction, Bullet_OtherFraction, Destructible_Environment };
 
     float fire_delay_timer = -1f;
     float bullet_col_half_offset = 0f;
@@ -235,6 +235,12 @@ public class Gun : MonoBehaviour
 
             p.Damage( damage_inflicted, hit_point );
             return Hit_test_result.Ship_OtherFraction;
+        }
+        
+        var d = colided_with.GetComponent<Destructible3D>();
+        if (d != null) {
+            if (fraction == Gun.Fractions.Player) { d.Hit(damage_inflicted); }
+            return Hit_test_result.Destructible_Environment;
         }
 
         var e = colided_with.GetComponent<Ship_Enemy>();

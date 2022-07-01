@@ -50,10 +50,13 @@ public class Bullet : MonoBehaviour
         if (res == Gun.Hit_test_result.Ship_OtherFraction) {
             if (!gun.weapon.pass_through_enemies) { Destroy(gameObject); return; }
         }
-
+        if (res == Gun.Hit_test_result.Destructible_Environment) {
+            if (!gun.weapon.pass_through_environment) { Destroy(gameObject); return; }
+        }
+        
         if (res == Gun.Hit_test_result.Unknown) {
             //Probably environment
-            Destroy(gameObject);
+            if (!gun.weapon.pass_through_environment) { Destroy(gameObject); return; }
         }
 
         //var p = g.GetComponent<Player>();
