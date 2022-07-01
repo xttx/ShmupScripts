@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Destructible : MonoBehaviour
+public class Destructible2D : MonoBehaviour
 {
     public float HP = 1f;
     public Death_Info Death_Settings = new Death_Info();
@@ -12,7 +12,7 @@ public class Destructible : MonoBehaviour
         public bool Destroy_This_Object = true;
     }
 
-    public static List<Destructible> destructibles_list = new List<Destructible>();
+    public static List<Destructible2D> destructibles_list = new List<Destructible2D>();
 
     [HideInInspector]
     public Collider[] colliders = null;

@@ -264,7 +264,7 @@ public class Gun : MonoBehaviour
         var bullet_pos_RD_2D = cam.WorldToScreenPoint(bullet_pos_RD);
         var r_bullet = new Rect(bullet_pos_LU_2D, bullet_pos_RD_2D - bullet_pos_LU_2D);
         
-        foreach (var d in Destructible.destructibles_list) {
+        foreach (var d in Destructible2D.destructibles_list) {
             if (d.colliders == null || d.colliders.Length == 0) continue;
 
             bool hit = false;
