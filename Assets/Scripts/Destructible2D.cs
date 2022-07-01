@@ -6,10 +6,12 @@ public class Destructible2D : MonoBehaviour
 {
     public float HP = 1f;
     public Death_Info Death_Settings = new Death_Info();
+    [System.Serializable]
     public class Death_Info {
         public string Anim_Trigger = "";
         public GameObject Spawn_Model = null;
         public bool Destroy_This_Object = true;
+        public Engine.camera_shake_info Death_Camera_Shake = new Engine.camera_shake_info();
     }
 
     public static List<Destructible2D> destructibles_list = new List<Destructible2D>();
@@ -48,6 +50,7 @@ public class Destructible2D : MonoBehaviour
                 Death_Anim(gameObject);
             }
 
+            if (Death_Settings.Death_Camera_Shake.time >= 0.1f) { Engine.camera_shake = Death_Settings.Death_Camera_Shake; }
             if (Death_Settings.Destroy_This_Object) Destroy(gameObject); 
         }
     }

@@ -26,11 +26,24 @@ public class Engine : MonoBehaviour
         public float VolumeScale = 1f;
     }
 
+    Vector3 camera_position = Vector3.zero;
+    [HideInInspector]
+    public static camera_shake_info camera_shake = new camera_shake_info();
+
+    [System.Serializable]
+    public class camera_shake_info {
+        public float time = 0f;
+        public float speed = 10f;
+        public float amplification = 3f;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         inst = this;
         Global_Settings.Init();
+
+        camera_position = camera_main.position;
 
         var audio_source_mus = camera_main.GetComponent<AudioSource>();
         if (audio_source_mus != null) audio_source_mus.volume = Global_Settings.Volume_Music;
@@ -54,7 +67,18 @@ public class Engine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        camera_main.position += new Vector3(0f, 0f, Scroll_Speed * Time.deltaTime);
+        camera_position += new Vector3(0f, 0f, Scroll_Speed * Time.deltaTime);
+        camera_main.position = camera_position;
+        if (camera_shake.time > 0f) {
+            Vector3 noise_offset = Vector3.zero;
+            noise_offset.x = Mathf.PerlinNoise(camera_shake.time * camera_shake.speed, 0f) - 0.5f;
+            noise_offset.z = Mathf.PerlinNoise(0f, camera_shake.time * camera_shake.speed) - 0.5f;
+            noise_offset *= camera_shake.amplification;
+            camera_main.position += noise_offset;
+
+            camera_shake.time -= Time.deltaTime;
+        }
+
         for (int n = 0; n < players.Length; n++) {
             if (players_spawned[n]) continue;
             if (Global_Settings.Player_Controls[n] == null) continue;

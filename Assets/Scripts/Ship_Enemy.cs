@@ -14,6 +14,7 @@ public class Ship_Enemy : Ship_Base
     public float Auto_Target_Tilt_Speed = 10f;
     public Ship_Enemy[] activate_enemies = null;
     public Fire_Burst_Info Fire_Burst = new Fire_Burst_Info();
+    public Engine.camera_shake_info Death_Camera_Shake = new Engine.camera_shake_info();
 
     float fire_timer = 0f;
     float spline_timer = 0f;
@@ -97,6 +98,10 @@ public class Ship_Enemy : Ship_Base
             var coord = Movement_Spline_Settings.spline.EvaluatePosition(spline_timer);
             transform.position = coord;
             spline_timer += Movement_Spline_Settings.Speed * (Time.deltaTime / 100f);
+            //if ( Mathf.Approximately(Auto_Target_Speed, 0f)) {
+            //    var rot = Movement_Spline_Settings.spline.EvaluateTangent(spline_timer);
+            //    transform.rotation = Quaternion.Euler(0f, rot.x, 0f);
+            //}
         }
         
 
@@ -135,6 +140,7 @@ public class Ship_Enemy : Ship_Base
         if (Movement_Type == Movement_Types.spline && Movement_Spline_Settings != null) {
             Destroy(Movement_Spline_Settings.spline.gameObject);
         }
+        if (Death_Camera_Shake.time > 0.01f) { Engine.camera_shake = Death_Camera_Shake; }
     }
 
     //void Auto_Rotate() {

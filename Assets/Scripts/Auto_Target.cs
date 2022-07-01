@@ -23,6 +23,7 @@ public class Auto_Target : MonoBehaviour
     public static void Auto_Rotate(Transform tr, float rotate_speed, float tilt_speed = 0f, float tilt_max = 0f) {
         if (Mathf.Approximately(rotate_speed, 0f)) return;
 
+        if (Engine.inst.players[0] == null) return;
         var target = Engine.inst.players[0].transform;
         //TODO: check for other players
 
