@@ -76,7 +76,8 @@ public class Ship_Enemy : Ship_Base
         }
 
         Update_base();
-        Auto_Rotate();
+        //Auto_Rotate();
+        Auto_Target.Auto_Rotate(transform, Auto_Target_Speed, Auto_Target_Tilt_Speed, Auto_Target_Tilt_Max);
 
         if (Fire_Burst.enabled) {
             if (active && !fire_burst_active) {
@@ -136,24 +137,24 @@ public class Ship_Enemy : Ship_Base
         }
     }
 
-    void Auto_Rotate() {
-        if (Mathf.Approximately(Auto_Target_Speed, 0f)) return;
+    //void Auto_Rotate() {
+    //    if (Mathf.Approximately(Auto_Target_Speed, 0f)) return;
 
-        var target = Engine.inst.players[0].transform;
-        //TODO: check for other players
+    //    var target = Engine.inst.players[0].transform;
+    //    //TODO: check for other players
 
-        var dir = target.position - transform.position;
-        dir.y = 0f;
-        var rotation = Quaternion.LookRotation(dir);
-        rotation = Quaternion.RotateTowards(transform.rotation, rotation, Auto_Target_Speed * Time.deltaTime);
+    //    var dir = target.position - transform.position;
+    //    dir.y = 0f;
+    //    var rotation = Quaternion.LookRotation(dir);
+    //    rotation = Quaternion.RotateTowards(transform.rotation, rotation, Auto_Target_Speed * Time.deltaTime);
         
-        float target_rot_z = 0f;
-        if (transform.rotation.eulerAngles.y > rotation.eulerAngles.y) { target_rot_z = Auto_Target_Tilt_Max; } 
-        else { target_rot_z = -Auto_Target_Tilt_Max; }
-        var rotation_tilted = Quaternion.Euler(rotation.eulerAngles.x, rotation.eulerAngles.y, target_rot_z);
-        rotation = Quaternion.RotateTowards(rotation, rotation_tilted, Auto_Target_Tilt_Speed * Time.deltaTime);
+    //    float target_rot_z = 0f;
+    //    if (transform.rotation.eulerAngles.y > rotation.eulerAngles.y) { target_rot_z = Auto_Target_Tilt_Max; } 
+    //    else { target_rot_z = -Auto_Target_Tilt_Max; }
+    //    var rotation_tilted = Quaternion.Euler(rotation.eulerAngles.x, rotation.eulerAngles.y, target_rot_z);
+    //    rotation = Quaternion.RotateTowards(rotation, rotation_tilted, Auto_Target_Tilt_Speed * Time.deltaTime);
 
-        transform.rotation = rotation;
-    }
+    //    transform.rotation = rotation;
+    //}
 }
 
